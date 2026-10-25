@@ -2,6 +2,10 @@
 
 PromBoard 커뮤니티 플러그인입니다. 캔버스에 **TripoSG 이미지 → 3D 형상** 노드 하나를 더합니다. 물체 사진 한 장을 넣으면 3D 형상(메시)을 GLB 파일로 만듭니다. 색 · 재질은 입히지 않고 모양만 만들며, 날카로운 모서리와 얇은 부분을 잘 살리는 VAST-AI [TripoSG](https://github.com/VAST-AI-Research/TripoSG)(1.5B)를 씁니다.
 
+![물체 사진 → 배경 지우기(BiRefNet) → TripoSG 형상 → 메시 뽑기 · 줄이기 → 3D 형상 GLB](docs/pipeline.png)
+
+노드 안에서 일어나는 순서입니다(`docs/scripts/pipeline.py` 로 그림).
+
 > 미검증: 이 플러그인은 아직 끝까지 돌려 보지 못했습니다(앱에 '검증 안 됨'으로 보입니다). 결과 그림은 실제로 돌려 본 뒤 넣습니다.
 
 ## 노드
@@ -58,6 +62,10 @@ docs/scripts/                  README 그림 만드는 스크립트(GLB → thre
 ## English
 
 A PromBoard community plugin. It adds one **TripoSG image → 3D shape** node: give it one photo of an object and it writes a 3D shape (mesh) as GLB, geometry only, no color or material. It uses VAST-AI [TripoSG](https://github.com/VAST-AI-Research/TripoSG) (1.5B), which keeps sharp edges and thin parts well.
+
+![Object photo → background removal (BiRefNet) → TripoSG shape → marching cubes and decimation → 3D shape GLB](docs/pipeline.png)
+
+What happens inside the node, in order (drawn by `docs/scripts/pipeline.py`).
 
 > Not verified: this plugin has not been run end to end yet (the app shows it as unverified). Result images will be added after a real run.
 
