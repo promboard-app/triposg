@@ -1,0 +1,19 @@
+promboard.triposg
+Copyright 2026 PromBoard
+
+The plugin's own code (nodes/main.py, nodes/cutout.py) is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+nodes/triposg contains the triposg package from VAST-AI-Research/TripoSG
+(https://github.com/VAST-AI-Research/TripoSG, commit fc5c40990181e2a756c4e0b1c2f4d6b5202faf8c),
+Copyright (c) 2025 VAST-AI-Research and contributors, MIT License (nodes/triposg/LICENSE).
+Changes made by PromBoard: added empty __init__.py files; in inference_utils.py the diso import was moved
+inside flash_extract_geometry (the plugin uses the scikit-image marching cubes path, use_flash_decoder=False).
+
+nodes/triposg/models/transformers/triposg_transformer.py is based on Tencent HunyuanDiT and portions of it are
+subject to the Tencent Hunyuan Community License Agreement, including its Acceptable Use Policy (full text in
+the header of that file). That agreement does not apply in the European Union and is limited to its Territory.
+Tencent Hunyuan is licensed under the Tencent Hunyuan Community License Agreement, Copyright © 2024 Tencent.
+All Rights Reserved. The trademark rights of "Tencent Hunyuan" are owned by Tencent or its affiliate.
+
+Model weights are not included. The plugin downloads VAST-AI/TripoSG (MIT License) from Hugging Face and the
+BiRefNet ONNX model (ZhengPeng7/BiRefNet GitHub release v1, MIT License) at prepare time.

@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "id": "promboard.triposg",
+  "version": "1.0.0",
+  "name": "TripoSG — 이미지 → 3D 형상",
+  "description": "VAST-AI TripoSG(1.5B)로 물체 사진 한 장에서 3D 형상(메시)을 GLB 로 만든다. 색 · 재질 없이 모양만 만들며 날카로운 모서리와 얇은 부분을 잘 살린다. 배경은 BiRefNet(MIT)으로 지운다. NVIDIA 그래픽카드(CUDA) 전용.",
+  "author": "PromBoard",
+  "license": "MIT AND Apache-2.0",
+  "app": ">=1.0.3",
+  "categories": [
+    "model3d"
+  ],
+  "unverified": true,
+  "repository": "https://github.com/promboard-app/triposg",
+  "icon": "icon.png",
+  "contents": [
+    "nodes"
+  ],
+  "nodes": [
+    {
+      "id": "image-to-shape",
+      "label": "TripoSG 이미지 → 3D 형상",
+      "description": "물체 사진 한 장으로 3D 형상(메시)을 GLB 로 만든다. 색 · 재질은 입히지 않는다. 배경은 투명 PNG 면 그대로 쓰고, 아니면 BiRefNet 으로 지운다. 물체 하나가 가운데에 크게 나온 그림이 잘 된다.",
+      "layout": "single",
+      "views": [
+        "orbit3d"
+      ],
+      "inputs": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": "물체 사진",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "model",
+          "type": "model3d",
+          "label": "3D 형상 (GLB)"
+        }
+      ],
+      "settings": [
+        {
+          "id": "background",
+          "label": "배경 지우기",
+          "help": "자동은 투명 PNG 면 그 투명도를 쓰고, 아니면 BiRefNet(약 0.2GB 받음)으로 배경을 지웁니다. 이미 흰 배경에 물체만 있는 그림이면 '안 함'을 고릅니다.",
+          "type": "select",
+          "options": [
+            {
+              "value": "auto",
+              "label": "자동"
+            },
+            {
+              "value": "birefnet",
+              "label": "늘 BiRefNet 으로 지우기"
+            },
+            {
+              "value": "none",
+              "label": "안 함"
+            }
+          ],
+          "default": "auto"
+        },
+        {
+          "id": "faces",
+          "label": "면 수",
+          "help": "결과 메시의 삼각형 수. 원본은 수십만~백만 개라 파일이 큽니다. 줄이면 가볍고 웹 · 게임에 쓰기 좋습니다.",
+          "type": "select",
+          "options": [
+            {
+              "value": "50000",
+              "label": "5만 (가볍게)"
+            },
+            {
+              "value": "200000",
+              "label": "20만 (보통)"
+            },
+            {
+              "value": "0",
+              "label": "원본 그대로"
+            }
+          ],
+          "default": "200000"
+        },
+        {
+          "id": "steps",
+          "label": "단계 수",
+          "help": "많을수록 모양이 다듬어지지만 오래 걸립니다. 공식 기본은 50.",
+          "type": "integer",
+          "default": 50,
+          "min": 10,
+          "max": 100
+        },
+        {
+          "id": "guidance",
+          "label": "그림 따르기",
+          "help": "클수록 넣은 그림의 모양을 더 따릅니다. 공식 기본은 7.",
+          "type": "number",
+          "default": 7.0,
+          "min": 1.0,
+          "max": 15.0,
+          "step": 0.5
+        },
+        {
+          "id": "seed",
+          "label": "시드",
+          "help": "같은 시드 · 같은 그림이면 같은 결과가 나옵니다.",
+          "type": "integer",
+          "default": 42,
+          "min": 0,
+          "max": 2147483647
+        }
+      ]
+    }
+  ],
+  "python": {
+    "version": "3.12",
+    "torch": "host",
+    "lock": {
+      "win": "nodes/requirements-win.txt",
+      "linux": "nodes/requirements-linux.txt"
+    },
+    "entry": "nodes.main"
+  },
+  "gpu": {
+    "vramMinMb": 8192,
+    "cpuAllowed": false
+  },
+  "permissions": {},
+  "requires": {
+    "models": [
+      {
+        "source": "huggingface",
+        "repo": "VAST-AI/TripoSG",
+        "revision": "2c1c516d22d58db486a058d98d31bb6177344e06",
+        "license": "MIT",
+        "files": [
+          {
+            "path": "model_index.json",
+            "bytes": 525,
+            "sha256": "750af638d10fc67a5f43d19ef0a0d1d3d446174e24b73bddd0a49226016c80c2"
+          },
+          {
+            "path": "feature_extractor_dinov2/preprocessor_config.json",
+            "bytes": 436,
+            "sha256": "14e780d86fa1861f8751f868d7f45425b5feb55c38ca26f152ca5097ab30f828"
+          },
+          {
+            "path": "image_encoder_dinov2/config.json",
+            "bytes": 1104,
+            "sha256": "8ed81b0d5ffd2c8b2cecd7dc1326d3eefa409bc9d525537b6b2a3c70a992fd02"
+          },
+          {
+            "path": "image_encoder_dinov2/model.safetensors",
+            "bytes": 1217522888,
+            "sha256": "399fba97a95f22c36834418bc69373364a99af3a1153da1c0fb31db567c92e23"
+          },
+          {
+            "path": "scheduler/scheduler_config.json",
+            "bytes": 158,
+            "sha256": "ea7c9b4d502dcaba97cd85291cfd7dbd3c6c82cbc4c775af5c6d9224864279c9"
+          },
+          {
+            "path": "transformer/config.json",
+            "bytes": 191,
+            "sha256": "54ad779e68f9bc7303122cdf291f6db48dec7c67e41d28c05ac359daf914128a"
+          },
+          {
+            "path": "transformer/diffusion_pytorch_model.safetensors",
+            "bytes": 5758280104,
+            "sha256": "9192b5923f7b605b394192809aa2ceb73bf0f4009674d8e3b999b45bb97d4bf2"
+          },
+          {
+            "path": "vae/config.json",
+            "bytes": 335,
+            "sha256": "2fb6ba9b364d42c9681879dca0f7edcb978f2db974a1ca4b15d28f9b15a5baed"
+          },
+          {
+            "path": "vae/diffusion_pytorch_model.safetensors",
+            "bytes": 970685468,
+            "sha256": "a2e667c24927a5a35e5f19fcb4c75890e9399aa966b6db8131d7df733a750c8b"
+          }
+        ]
+      },
+      {
+        "source": "url",
+        "url": "https://github.com/ZhengPeng7/BiRefNet/releases/download/v1/BiRefNet-general-bb_swin_v1_tiny-epoch_232.onnx",
+        "path": "birefnet/BiRefNet-general-bb_swin_v1_tiny-epoch_232.onnx",
+        "bytes": 224005088,
+        "sha256": "5600024376f572a557870a5eb0afb1e5961636bef4e1e22132025467d0f03333",
+        "license": "MIT",
+        "when": {
+          "node": "image-to-shape",
+          "setting": "background",
+          "values": [
+            "auto",
+            "birefnet"
+          ]
+        }
+      }
+    ]
+  },
+  "licenseNotice": {
+    "excludedRegions": [
+      "EU"
+    ],
+    "conditions": "트랜스포머 코드 일부가 Tencent HunyuanDiT 에서 왔고 그 부분은 Tencent Hunyuan Community License(2024-05-14판)를 따른다. EU 에서는 쓸 수 없다. 다시 나눠 줄 때는 약관 사본과 Notice 문구를 함께 준다(이 플러그인은 그 파일 머리와 NOTICE 에 담았다). 약관의 사용 제한(Acceptable Use Policy)을 지키고 받는 사람에게도 알린다. 그 판 공개일에 월 이용자가 1억 명을 넘던 회사는 Tencent 의 허락을 따로 받아야 한다. TripoSG 모델 가중치는 MIT.",
+    "url": "https://github.com/Tencent/HunyuanDiT/blob/main/LICENSE.txt"
+  }
+}
